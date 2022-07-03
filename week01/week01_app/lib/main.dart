@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 void main() {
-  // debugPaintSizeEnabled = true;
+  debugPaintSizeEnabled = false;
   runApp(const MyApp());
 }
 
@@ -235,152 +236,134 @@ class Ex06Route extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Navigate back to first route when tapped.
-          },
-          child: const Text('Go back!'),
-        ),
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                width: 70,
+                height: 70,
+                color: const Color(0xffff0000),
+              ),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 70,
+                height: 70,
+                color: const Color(0xff00ff00),
+              ),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                width: 70,
+                height: 70,
+                color: const Color(0xff0000ff),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 }
 
-class Ex07Route extends StatelessWidget {
+class Ex07Route extends StatefulWidget {
   const Ex07Route({Key? key}) : super(key: key);
+  @override
+  State<Ex07Route> createState() => _Ex07Route();
+}
+
+class _Ex07Route extends State<Ex07Route> {
+  bool isChecked = true;
+  final List<Container> _containerList = [];
+  void _addContainer() {
+    setState(() {
+      _containerList.add(_cntr());
+    });
+  }
+
+  Container _cntr() {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.fromLTRB(30, 30, 30, 0),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Checkbox(
+                activeColor: Colors.black87,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                value: isChecked,
+                onChanged: (bool? value) {
+                  setState(
+                    () {
+                      isChecked = value!;
+                    },
+                  );
+                },
+              ),
+              Text(
+                '제목${_containerList.length + 1}',
+                style: const TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(40, 0, 0, 0),
+            child: Text(
+              '내용',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Navigate back to first route when tapped.
-          },
-          child: const Text('Go back!'),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addContainer,
+        tooltip: 'Add',
+        backgroundColor: Colors.grey,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
         ),
       ),
+      body: ListView.builder(
+          itemCount: _containerList.length,
+          itemBuilder: (context, index) {
+            return _containerList[index];
+          }),
     );
   }
 }
-
-
-// import 'package:flutter/material.dart';
-
-// void main() {
-//   // debugPaintSizeEnabled = true;
-//   runApp(const MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Week01',
-//       theme: ThemeData(
-//         appBarTheme: const AppBarTheme(
-//           color: Colors.white,
-//         ),
-//       ),
-//       home: const MyHomePage(title: 'Flutter Demo Home Page'),
-//     );
-//   }
-// }
-
-// class MyHomePage extends StatefulWidget {
-//   const MyHomePage({Key? key, required this.title}) : super(key: key);
-//   final String title;
-
-//   @override
-//   State<MyHomePage> createState() => _MyHomePageState();
-// }
-
-// const List<Tab> tabs = <Tab>[
-//   Tab(text: 'Zeroth'),
-//   Tab(text: 'First'),
-//   Tab(text: 'Second'),
-// ];
-
-// class _MyHomePageState extends State<MyHomePage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return DefaultTabController(
-//       length: tabs.length,
-//       // The Builder widget is used to have a different BuildContext to access
-//       // closest DefaultTabController.
-//       child: Builder(builder: (BuildContext context) {
-//         final TabController tabController = DefaultTabController.of(context)!;
-//         tabController.addListener(() {
-//           if (!tabController.indexIsChanging) {
-//             // Your code goes here.
-//             // To get index of current tab use tabController.index
-//           }
-//         });
-//         return Scaffold(
-//           appBar: AppBar(
-//             leading: IconButton(
-//                 icon: Image.asset('assets/icons/kodong.png'), onPressed: null),
-//             actions: [
-//               IconButton(
-//                   icon: Image.asset('assets/icons/bangmark.png',
-//                       height: 20, width: 20),
-//                   onPressed: null),
-//             ],
-//             bottom: const TabBar(
-//               tabs: tabs,
-//             ),
-//           ),
-//           body: TabBarView(
-//             children: tabs.map((Tab tab) {
-//               return Center(
-//                 child: Text(
-//                   '${tab.text!} Tab',
-//                   style: Theme.of(context).textTheme.headline5,
-//                 ),
-//               );
-//             }).toList(),
-//           ),
-//         );
-//       }),
-//     );
-//   }
-// }
-
-// class FirstRoute extends StatelessWidget {
-//   const FirstRoute({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Center(
-//         child: ElevatedButton(
-//           onPressed: () {
-//             // Navigate back to first route when tapped.
-//           },
-//           child: const Text('Go back!'),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class SecondRoute extends StatelessWidget {
-//   const SecondRoute({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Center(
-//         child: ElevatedButton(
-//           onPressed: () {
-//             // Navigate back to first route when tapped.
-//           },
-//           child: const Text('Go to!'),
-//         ),
-//       ),
-//     );
-//   }
-// }
