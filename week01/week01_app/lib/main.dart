@@ -54,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // elevation: 0,
         leading: IconButton(
             icon: Image.asset('assets/icons/kodong.png'), onPressed: null),
         actions: [
@@ -181,17 +182,17 @@ class Ex04Route extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            height: 70,
+            height: 300,
             color: const Color(0xffff0000),
           ),
           Expanded(
             child: Container(
-              height: 70,
+              height: 300,
               color: const Color(0xff00ff00),
             ),
           ),
           Container(
-            height: 70,
+            height: 300,
             color: const Color(0xff0000ff),
           ),
         ],
