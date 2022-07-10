@@ -120,6 +120,9 @@ class _RecordState extends State<Record> {
                     onPressed: () {
                       setState(() {
                         savePost(titleController.text, contentController.text);
+                        titleController.clear();
+                        contentController.clear();
+                        FocusScope.of(context).unfocus();
                       });
                     },
                     child: const Text('완료'),
