@@ -60,14 +60,11 @@ class _RecordState extends State<Record> {
     }
     widget.posts.add(Post(title: title, content: content));
     List items = widget.posts.map((e) => e.toJson()).toList();
-    print(items);
     prefs.setString('postlist', jsonEncode(items));
   }
 
   @override
   Widget build(BuildContext context) {
-    print("RECORD");
-    print(widget.isSelected);
     return Scaffold(
       appBar: BaseAppBar(
         title: const Text(''),
@@ -160,16 +157,9 @@ class _RListState extends State<RList> {
 
   void removePost(Post post) async {
     prefs = await SharedPreferences.getInstance();
-    for (var i in widget.posts) {
-      print(i.title);
-      print(i.content);
-    }
+
     widget.posts.removeWhere((item) => item == post);
 
-    for (var i in widget.posts) {
-      print(i.title);
-      print(i.content);
-    }
     List items = widget.posts.map((e) => e.toJson()).toList();
     prefs.setString('postlist', jsonEncode(items));
   }
@@ -182,9 +172,6 @@ class _RListState extends State<RList> {
 
   @override
   Widget build(BuildContext context) {
-    print("RLIST");
-    print(widget.isSelected);
-
     return Scaffold(
       appBar: BaseAppBar(
         title: const Text(''),
@@ -300,8 +287,6 @@ class BaseNaviBar extends StatefulWidget {
 class _BaseNaviBarState extends State<BaseNaviBar> {
   @override
   Widget build(BuildContext context) {
-    print("navibar");
-    print(widget.isSelected);
     return Container(
       alignment: Alignment.bottomCenter,
       margin: const EdgeInsets.fromLTRB(0, 0, 0, 25),
