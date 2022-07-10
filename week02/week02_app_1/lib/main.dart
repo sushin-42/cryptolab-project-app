@@ -53,19 +53,15 @@ class _RecordState extends State<Record> {
   void savePost(String title, String content) async {
     prefs = await SharedPreferences.getInstance();
     String? stringList = prefs.getString('postlist');
-    if (stringList == null) {
-      widget.posts.add(Post(title: title, content: content));
-      prefs.setString(
-          'postlist', jsonEncode(widget.posts.map((e) => e.toJson()).toList()));
-    } else {
-      List postList = jsonDecode(stringList);
-      for (var post in postList) {
-        widget.posts.add(Post().fromJson(post));
-      }
-      widget.posts.add(Post(title: title, content: content));
-      List items = widget.posts.map((e) => e.toJson()).toList();
-      prefs.setString('postlist', jsonEncode(items));
+
+    List postList = jsonDecode(stringList!);
+    for (var post in postList) {
+      widget.posts.add(Post().fromJson(post));
     }
+    widget.posts.add(Post(title: title, content: content));
+    List items = widget.posts.map((e) => e.toJson()).toList();
+    print(items);
+    prefs.setString('postlist', jsonEncode(items));
   }
 
   @override
