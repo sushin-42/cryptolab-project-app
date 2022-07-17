@@ -26,7 +26,9 @@ class MyApp extends StatelessWidget {
       title: 'week02',
       initialRoute: '/0',
       routes: {
-        '/0': (context) => Record(isSelected: _isSelected),
+        '/0': (context) => Record(
+              isSelected: _isSelected,
+            ),
         '/1': (context) => RList(isSelected: _isSelected),
       },
       debugShowCheckedModeBanner: false,
@@ -58,6 +60,7 @@ class _RecordState extends State<Record> {
     for (var post in postList) {
       widget.posts.add(Post().fromJson(post));
     }
+
     widget.posts.add(Post(title: title, content: content));
     List items = widget.posts.map((e) => e.toJson()).toList();
     prefs.setString('postlist', jsonEncode(items));
@@ -168,6 +171,7 @@ class _RListState extends State<RList> {
   void initState() {
     super.initState();
     setPostList();
+    print(widget.posts);
   }
 
   @override
