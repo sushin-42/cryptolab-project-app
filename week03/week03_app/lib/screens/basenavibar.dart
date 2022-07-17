@@ -42,6 +42,7 @@ class _BaseNaviBarState extends State<BaseNaviBar> {
         children: const [
           ToggleButton(name: '기록'),
           ToggleButton(name: '조회'),
+          ToggleButton(name: '시간'),
         ],
       ),
     );

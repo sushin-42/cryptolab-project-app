@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:week03_app/screens/background.dart';
 import 'package:week03_app/screens/record.dart';
 import 'package:week03_app/screens/rlist.dart';
 
@@ -17,6 +18,7 @@ class _MyAppState extends State<MyApp> {
   final List<bool> _isSelected = [
     true,
     false,
+    false,
   ];
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,12 @@ class _MyAppState extends State<MyApp> {
         '/0': (context) => Record(
               isSelected: _isSelected,
             ),
-        '/1': (context) => RList(isSelected: _isSelected),
+        '/1': (context) => RList(
+              isSelected: _isSelected,
+            ),
+        '/2': (context) => Background(
+              isSelected: _isSelected,
+            ),
       },
       debugShowCheckedModeBanner: false,
     );
