@@ -42,6 +42,7 @@ class _BaseNaviBarState extends State<BaseNaviBar> {
         children: const [
           ToggleButton(name: '기록'),
           ToggleButton(name: '조회'),
+          ToggleButton(name: '작업'),
           ToggleButton(name: '시간'),
         ],
       ),
@@ -56,7 +57,7 @@ class ToggleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.3,
+      width: MediaQuery.of(context).size.width * 0.1,
       decoration: BoxDecoration(
           color: Colors.lightBlue.shade200,
           borderRadius: BorderRadius.circular(100)),

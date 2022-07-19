@@ -1,71 +1,46 @@
-import 'dart:io';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week03_app/screens/baseappbar.dart';
 import 'package:week03_app/screens/basenavibar.dart';
+import 'package:week03_app/services/timedb.dart';
 import 'package:workmanager/workmanager.dart';
 
-const simpleTaskKey = "be.tramckrijte.workmanagerExample.simpleTask";
-const rescheduledTaskKey = "be.tramckrijte.workmanagerExample.rescheduledTask";
-const failedTaskKey = "be.tramckrijte.workmanagerExample.failedTask";
-const simpleDelayedTask = "be.tramckrijte.workmanagerExample.simpleDelayedTask";
-const simplePeriodicTask =
-    "be.tramckrijte.workmanagerExample.simplePeriodicTask";
-const simplePeriodic1HourTask =
-    "be.tramckrijte.workmanagerExample.simplePeriodic1HourTask";
+const taskonetime = "taskOneTime";
+const taskdelayedtime = "taskDelayedTime";
+const taskmperiodictime = "taskMPeriodicTime";
+const taskhperiodictime = "taskHPeriodicTime";
 
 void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    print(' $task');
-    switch (task) {
-      case simpleTaskKey:
-        print("$simpleTaskKey was executed. inputData = $inputData");
-        final prefs = await SharedPreferences.getInstance();
-        prefs.setBool("test", true);
-        print("Bool from prefs: ${prefs.getBool("test")}");
-        print('');
-        break;
-      case rescheduledTaskKey:
-        final key = inputData!['key']!;
-        final prefs = await SharedPreferences.getInstance();
-        if (prefs.containsKey('unique-$key')) {
-          print('has been running before, task is successful');
-          return true;
-        } else {
-          await prefs.setBool('unique-$key', true);
-          print('reschedule task');
-          return false;
-        }
-      case failedTaskKey:
-        print('failed task');
-        return Future.error('failed');
-      case simpleDelayedTask:
-        print("$simpleDelayedTask was executed");
-        break;
-      case simplePeriodicTask:
-        print("$simplePeriodicTask was executed");
-        break;
-      case simplePeriodic1HourTask:
-        print("$simplePeriodic1HourTask was executed");
-        break;
-      case Workmanager.iOSBackgroundTask:
-        print("The iOS background fetch was triggered");
-        Directory? tempDir = await getTemporaryDirectory();
-        String? tempPath = tempDir.path;
-        print(
-            "You can access other plugins in the background, for example Directory.getTemporaryDirectory(): $tempPath");
-        break;
-    }
+  Workmanager().executeTask((taskName, inputData) async {
+    switch (taskName) {
+      case taskonetime:
+        print("$taskName was executed");
+        await saveTimeDB(taskName);
 
+        break;
+      case taskdelayedtime:
+        print("$taskName was executed");
+        await saveTimeDB(taskName);
+
+        break;
+      case taskmperiodictime:
+        print("$taskName was executed");
+        await saveTimeDB(taskName);
+
+        break;
+      case taskhperiodictime:
+        print("$taskName was executed");
+        await saveTimeDB(taskName);
+
+        break;
+      default:
+    }
     return Future.value(true);
   });
 }
 
 class Background extends StatefulWidget {
   final List<bool> isSelected;
+
   const Background({Key? key, required this.isSelected}) : super(key: key);
 
   @override
@@ -82,125 +57,107 @@ class _BackgroundState extends State<Background> {
       ),
       body: Stack(
         children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Text(
-                    "Plugin initialization",
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
-                  ElevatedButton(
-                    child: Text("Start the Flutter background service"),
-                    onPressed: () {
-                      Workmanager().initialize(
-                        callbackDispatcher,
-                        isInDebugMode: true,
-                      );
-                      print('ÒÒ');
-                    },
-                  ),
-                  SizedBox(height: 16),
-
-                  //This task runs once.
-                  //Most likely this will trigger immediately
-                  ElevatedButton(
-                    child: Text("Register OneOff Task"),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                ElevatedButton(
+                  child: Text("Start the Flutter background service"),
+                  onPressed: () {
+                    Workmanager().initialize(
+                      callbackDispatcher,
+                      isInDebugMode: true,
+                    );
+                  },
+                ),
+                SizedBox(height: 16),
+                ElevatedButton(
                     onPressed: () {
                       Workmanager().registerOneOffTask(
-                        simpleTaskKey,
-                        simpleTaskKey,
-                        inputData: <String, dynamic>{
-                          'int': 1,
-                          'bool': true,
-                          'double': 1.0,
-                          'string': 'string',
-                          'array': [1, 2, 3],
-                        },
+                        taskonetime,
+                        taskonetime,
                       );
                     },
-                  ),
-                  ElevatedButton(
-                    child: Text("Register rescheduled Task"),
+                    child: Text('$taskonetime')),
+                SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
                     onPressed: () {
                       Workmanager().registerOneOffTask(
-                        rescheduledTaskKey,
-                        rescheduledTaskKey,
-                        inputData: <String, dynamic>{
-                          'key': Random().nextInt(64000),
-                        },
+                        taskdelayedtime,
+                        taskdelayedtime,
+                        initialDelay: Duration(seconds: 5),
                       );
                     },
-                  ),
-                  ElevatedButton(
-                    child: Text("Register failed Task"),
+                    child: Text('$taskdelayedtime')),
+                SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
                     onPressed: () {
-                      Workmanager().registerOneOffTask(
-                        failedTaskKey,
-                        failedTaskKey,
+                      Workmanager().registerPeriodicTask(
+                        taskmperiodictime,
+                        taskmperiodictime,
+                        frequency: Duration(minutes: 1),
+                        constraints: Constraints(
+                          networkType: NetworkType.not_required,
+                          requiresBatteryNotLow: false,
+                          requiresCharging: false,
+                          requiresDeviceIdle: false,
+                          requiresStorageNotLow: false,
+                        ),
                       );
                     },
-                  ),
-                  //This task runs once
-                  //This wait at least 10 seconds before running
-                  ElevatedButton(
-                      child: Text("Register Delayed OneOff Task"),
-                      onPressed: () {
-                        Workmanager().registerOneOffTask(
-                          simpleDelayedTask,
-                          simpleDelayedTask,
-                          initialDelay: Duration(seconds: 10),
-                        );
-                      }),
-                  SizedBox(height: 8),
-                  //This task runs periodically
-                  //It will wait at least 10 seconds before its first launch
-                  //Since we have not provided a frequency it will be the default 15 minutes
-                  ElevatedButton(
-                      child: Text("Register Periodic Task (Android)"),
-                      onPressed: Platform.isAndroid
-                          ? () {
-                              Workmanager().registerPeriodicTask(
-                                simplePeriodicTask,
-                                simplePeriodicTask,
-                                initialDelay: Duration(seconds: 10),
-                              );
-                            }
-                          : null),
-                  //This task runs periodically
-                  //It will run about every hour
-                  ElevatedButton(
-                      child: Text("Register 1 hour Periodic Task (Android)"),
-                      onPressed: Platform.isAndroid
-                          ? () {
-                              Workmanager().registerPeriodicTask(
-                                simplePeriodicTask,
-                                simplePeriodic1HourTask,
-                                frequency: Duration(hours: 1),
-                              );
-                            }
-                          : null),
-                  SizedBox(height: 16),
-                  Text(
-                    "Task cancellation",
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
-                  ElevatedButton(
-                    child: Text("Cancel All"),
-                    onPressed: () async {
-                      await Workmanager().cancelAll();
-                      print('Cancel all tasks completed');
+                    child: Text('$taskmperiodictime')),
+                SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      Workmanager().registerPeriodicTask(
+                        taskhperiodictime,
+                        taskhperiodictime,
+                        frequency: Duration(hours: 1),
+                        constraints: Constraints(
+                          networkType: NetworkType.not_required,
+                          requiresBatteryNotLow: false,
+                          requiresCharging: false,
+                          requiresDeviceIdle: false,
+                          requiresStorageNotLow: false,
+                        ),
+                      );
                     },
-                  ),
-                ],
-              ),
+                    child: Text('$taskhperiodictime')),
+                SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
+                  child: Text("Cancel All"),
+                  onPressed: () async {
+                    await Workmanager().cancelAll();
+                    print('Cancel all tasks completed');
+                  },
+                ),
+              ],
             ),
           ),
-          BaseNaviBar(isSelected: widget.isSelected),
+          BaseNaviBar(isSelected: widget.isSelected)
         ],
       ),
     );
   }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 }
+
+/*
+registerOneOffTask
+
+
+
+
+*/

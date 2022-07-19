@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:week03_app/screens/background.dart';
 import 'package:week03_app/screens/record.dart';
 import 'package:week03_app/screens/rlist.dart';
+import 'package:week03_app/screens/timelist.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -17,6 +19,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final List<bool> _isSelected = [
     true,
+    false,
     false,
     false,
   ];
@@ -33,6 +36,9 @@ class _MyAppState extends State<MyApp> {
               isSelected: _isSelected,
             ),
         '/2': (context) => Background(
+              isSelected: _isSelected,
+            ),
+        '/3': (context) => TimeList(
               isSelected: _isSelected,
             ),
       },
