@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'dart:async';
 import 'dart:isolate';
 import 'dart:math';
@@ -10,8 +8,7 @@ import 'package:background_locator_2/location_dto.dart';
 import 'file_manager.dart';
 
 class LocationServiceRepository {
-  static final LocationServiceRepository _instance =
-      LocationServiceRepository._();
+  static LocationServiceRepository _instance = LocationServiceRepository._();
 
   LocationServiceRepository._();
 
@@ -42,7 +39,7 @@ class LocationServiceRepository {
     }
     print("$_count");
     await setLogLabel("start");
-    final SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
+    SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
     send?.send(null);
   }
 
@@ -50,14 +47,14 @@ class LocationServiceRepository {
     print("***********Dispose callback handler");
     print("$_count");
     await setLogLabel("end");
-    final SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
+    SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
     send?.send(null);
   }
 
   Future<void> callback(LocationDto locationDto) async {
     print('$_count location in dart: ${locationDto.toString()}');
     await setLogPosition(_count, locationDto);
-    final SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
+    SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
     send?.send(locationDto);
     _count++;
   }
@@ -80,10 +77,16 @@ class LocationServiceRepository {
   }
 
   static String formatDateLog(DateTime date) {
-    return "${date.hour}:${date.minute}:${date.second}";
+    return date.hour.toString() +
+        ":" +
+        date.minute.toString() +
+        ":" +
+        date.second.toString();
   }
 
   static String formatLog(LocationDto locationDto) {
-    return "${dp(locationDto.latitude, 4)} ${dp(locationDto.longitude, 4)}";
+    return dp(locationDto.latitude, 4).toString() +
+        " " +
+        dp(locationDto.longitude, 4).toString();
   }
 }

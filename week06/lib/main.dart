@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print, no_leading_underscores_for_local_identifiers, dead_code, prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api
-
 import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
@@ -16,7 +14,12 @@ import 'file_manager.dart';
 import 'location_callback_handler.dart';
 import 'location_service_repository.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  // apiKey의 호출을 위함.
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -27,7 +30,7 @@ class _MyAppState extends State<MyApp> {
   ReceivePort port = ReceivePort();
 
   String logStr = '';
-  bool? isRunning;
+  late bool isRunning;
   LocationDto? lastLocation;
 
   @override
@@ -126,12 +129,10 @@ class _MyAppState extends State<MyApp> {
       ),
     );
     String msgStatus = "-";
-    if (isRunning != null) {
-      if (isRunning!) {
-        msgStatus = 'Is running';
-      } else {
-        msgStatus = 'Is not running';
-      }
+    if (isRunning!) {
+      msgStatus = 'Is running';
+    } else {
+      msgStatus = 'Is not running';
     }
     final status = Text("Status: $msgStatus");
 
@@ -212,9 +213,9 @@ class _MyAppState extends State<MyApp> {
         initDataCallback: data,
         disposeCallback: LocationCallbackHandler.disposeCallback,
         iosSettings: IOSSettings(
-            accuracy: LocationAccuracy.NAVIGATION,
-            distanceFilter: 0,
-            stopWithTerminate: true),
+          accuracy: LocationAccuracy.NAVIGATION,
+          distanceFilter: 0,
+        ),
         autoStop: false,
         androidSettings: AndroidSettings(
             accuracy: LocationAccuracy.NAVIGATION,

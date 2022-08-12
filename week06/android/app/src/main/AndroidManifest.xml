@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sushin.week06">
+    package="com.crytolab.week06">
    <application
         android:label="week06"
         android:name="${applicationName}"
